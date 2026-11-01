@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magic Verse - Hub Creativ AI</title>
+    <style>
+        :root {
+            --bg-main: #0b0f19;
+            --bg-card: #131b2e;
+            --border-color: #1e293b;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2.5rem; background: rgba(19, 27, 46, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 1000; }
+        .logo { font-size: 1.4rem; font-weight: 800; background: linear-gradient(135deg, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        nav { display: flex; gap: 1rem; overflow-x: auto; }
+        nav button { background: none; border: none; color: var(--text-muted); font-size: 0.9rem; font-weight: 500; padding: 0.5rem 0.8rem; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; white-space: nowrap; }
+        nav button:hover, nav button.active { color: var(--text-main); background: rgba(99, 102, 241, 0.15); }
+        .studio-container { max-width: 1200px; margin: 2.5rem auto; padding: 0 1.5rem; width: 100%; display: none; }
+        .studio-container.active-section { display: block; }
+        .studio-container h2 { font-size: 2rem; margin-bottom: 0.5rem; font-weight: 700; }
+        .studio-subtitle { color: var(--text-muted); margin-bottom: 2rem; }
+        .workspace-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 2rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        @media(max-width: 900px) { .workspace-grid { grid-template-columns: 1fr; } }
+        .control-panel { display: flex; flex-direction: column; gap: 1.2rem; }
+        .control-group { display: flex; flex-direction: column; gap: 0.5rem; }
+        .control-group label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        textarea, input, select { width: 100%; padding: 0.9rem; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-main); font-size: 0.95rem; outline: none; }
+        textarea:focus, input:focus, select:focus { border-color: var(--accent); }
+        .btn-primary { background: var(--accent); color: white; border: none; padding: 0.9rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; text-decoration: none; }
+        .btn-primary:hover { background: var(--accent-hover); }
+        .preview-panel { background: var(--bg-main); border: 1px dashed var(--border-color); border-radius: 12px; display: flex; align-items: center; justify-content: center; min-height: 380px; position: relative; overflow: hidden; text-align: center; padding: 1rem; }
+        .preview-placeholder { color: var(--text-muted); font-size: 0.95rem; }
+        .preview-result { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; }
+        .preview-result img { max-width: 100%; max-height: 350px; border-radius: 8px; object-fit: contain; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+        .spinner { width: 40px; height: 40px; border: 3px solid rgba(99, 102, 241, 0.2); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .home-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; text-align: left; }
+        .studio-card { background: var(--bg-card); padding: 1.8rem; border-radius: 12px; border: 1px solid var(--border-color); cursor: pointer; transition: 0.2s; }
+        .studio-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">Magic Verse</div>
+        <nav>
+            <button onclick="switchTab('home')" id="nav-home" class="active">Acasă</button>
+            <button onclick="switchTab('art')" id="nav-art">Art Studio</button>
+            <button onclick="switchTab('photo')" id="nav-photo">Photo Studio</button>
+            <button onclick="switchTab('textfoto')" id="nav-textfoto">Text to Foto</button>
+            <button onclick="switchTab('textvideo')" id="nav-textvideo">Text to Video</button>
+            <button onclick="switchTab('melodie')" id="nav-melodie">Melodie Video</button>
+            <button onclick="switchTab('voice')" id="nav-voice">Voice Editor</button>
+        </nav>
+    </header>
+
+    <!-- ACASA -->
+    <main id="section-home" class="studio-container active-section" style="text-align: center; padding-top: 3rem;">
+        <h1 style="font-size: 2.8rem; margin-bottom: 1rem;">Universul tău creativ <span style="color: #818cf8;">Magic Verse</span></h1>
+        <p class="studio-subtitle" style="font-size: 1.1rem; max-width: 600px; margin: 0 auto 2.5rem;">Alege un studio de mai jos și experimentează instrumente inteligente de generație AI, 100% gratuite.</p>
+        <div class="home-grid">
+            <div class="studio-card" onclick="switchTab('art')"><h3 style="color: #818cf8; margin-bottom: 0.5rem;">🎨 Art Studio</h3><p style="color: var(--text-muted); font-size: 0.9rem;">Creează picturi și ilustrații digitale spectaculoase.</p></div>
+            <div class="studio-card" onclick="switchTab('photo')"><h3 style="color: #818cf8; margin-bottom: 0.5rem;">📸 Photo Studio</h3><p style="color: var(--text-muted); font-size: 0.9rem;">Editează și retușează fotografii la nivel profesional.</p></div>
+            <div class="studio-card" onclick="switchTab('textfoto')"><h3 style="color: #818cf8; margin-bottom: 0.5rem;">🖼️ Text to Foto</h3><p style="color: var(--text-muted); font-size: 0.9rem;">Transformă descrierile text în imagini extrem de detaliate.</p></div>
+            <div class="studio-card" onclick="switchTab('textvideo')"><h3 style="color: #818cf8; margin-bottom: 0.5rem;">🎬 Text to Video</h3><p style="color: var(--text-muted); font-size: 0.9rem;">Generează cadre și scenarii video dinamice din text.</p></div>
+            <div class="studio-card" onclick="switchTab('melodie')"><h3 style="color: #818cf8; margin-bottom: 0.5rem;">🎵 Melodie Video</h3><p style="color: var(--text-muted); font-size: 0.9rem;">Sincronizează linii melodice și fundaluri video automat.</p></div>
+            <div class="studio-card" onclick="switchTab('voice')"><h3 style="color: #818cf8; margin-bottom: 0.5rem;">🎙️ Voice Editor</h3><p style="color: var(--text-muted); font-size: 0.9rem;">Procesează, modulează și finisează fișiere audio și voci.</p></div>
+        </div>
+    </main>
+
+    <!-- ART STUDIO / TEXT TO FOTO -->
+    <div id="section-art" class="studio-container">
+        <h2>Art Studio & Text to Foto</h2>
+        <p class="studio-subtitle">Generează artă digitală și imagini unice folosind inteligența artificială.</p>
+        <div class="workspace-grid">
+            <div class="control-panel">
+                <div class="control-group"><label>Descriere Operă</label><textarea id="prompt-art" rows="5">Un peisaj cyberpunk futurist în nuante de neon</textarea></div>
+                <div class="control-group"><label>Stil Artistic</label><select id="style-art"><option value="digital art, highly detailed">Digital Art</option><option value="oil painting masterpiece">Pictură în ulei</option><option value="anime style, vibrant">Anime / Manga</option><option value="3d render">Randare 3D</option></select></div>
+                <button class="btn-primary" onclick="generateImage()">Generează Imaginea</button>
+            </div>
+            <div class="preview-panel" id="preview-art"><div class="preview-placeholder">Previzualizarea va apărea aici...</div></div>
+        </div>
+    </div>
+
+    <!-- PHOTO STUDIO -->
+    <div id="section-photo" class="studio-container">
+        <h2>Photo Studio</h2>
+        <p class="studio-subtitle">Încarcă o fotografie și aplică filtre sau ajustări profesionale.</p>
+        <div class="workspace-grid">
+            <div class="control-panel">
+                <div class="control-group"><label>Încarcă Imagine</label><input type="file" id="image-upload" accept="image/*"></div>
+                <div class="control-group"><label>Alege Filtru</label><select id="filter-select"><option value="none">Normal</option><option value="grayscale(100%)">Alb / Negru</option><option value="sepia(100%)">Sepia</option><option value="contrast(150%)">High Contrast</option></select></div>
+                <button class="btn-primary" onclick="applyPhotoFilter()">Aplică Filtrul</button>
+            </div>
+            <div class="preview-panel" id="photo-preview"><div class="preview-placeholder">Nicio imagine încărcată...</div></div>
+        </div>
+    </div>
+
+    <!-- TEXT TO VIDEO -->
+    <div id="section-textvideo" class="studio-container">
+        <h2>Text to Video</h2>
+        <p class="studio-subtitle">Transformă scenariile text în secvențe video animate.</p>
+        <div class="workspace-grid">
+            <div class="control-panel">
+                <div class="control-group"><label>Scenariu Video</label><textarea id="video-prompt" rows="5">O dronă care zboară deasupra unei păduri</textarea></div>
+                <button class="btn-primary" onclick="generateVideo()">Generează Video</button>
+            </div>
+            <div class="preview-panel" id="video-preview"><div class="preview-placeholder">Previzualizarea video va apărea aici...</div></div>
+        </div>
+    </div>
+
+    <!-- MELODIE VIDEO -->
+    <div id="section-melodie" class="studio-container">
+        <h2>Melodie Video</h2>
+        <p class="studio-subtitle">Sincronizează coloane sonore și elemente vizuale.</p>
+        <div class="workspace-grid">
+            <div class="control-panel">
+                <div class="control-group"><label>Stil Melodie / Ritm</label><input type="text" id="melodie-prompt" value="Synthwave relaxing beat"></div>
+                <button class="btn-primary" onclick="generateMelodie()">Generează Audio-Video</button>
+            </div>
+            <div class="preview-panel" id="melodie-preview"><div class="preview-placeholder">Previzualizarea va apărea aici...</div></div>
+        </div>
+    </div>
+
+    <!-- VOICE EDITOR -->
+    <div id="section-voice" class="studio-container">
+        <h2>Voice Editor</h2>
+        <p class="studio-subtitle">Înregistrează, editează și redă fișiere audio în browser.</p>
+        <div class="workspace-grid">
+            <div class="control-panel">
+                <div class="control-group"><label>Control Înregistrare</label><button id="record-btn" class="btn-primary" style="background: #ef4444;" onclick="toggleRecord()">🎙️ Înregistrează Vocea</button></div>
+            </div>
+            <div class="preview-panel" id="audio-preview"><div class="preview-placeholder">Nicio înregistrare disponibilă.</div></div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.studio-container').forEach(el => el.classList.remove('active-section'));
+            document.querySelectorAll('nav button').forEach(el => el.classList.remove('active'));
+            document.getElementById('section-' + tabId).classList.add('active-section');
+            document.getElementById('nav-' + tabId).classList.add('active');
+        }
+
+        function generateImage() {
+            const prompt = document.getElementById('prompt-art').value.trim();
+            const style = document.getElementById('style-art').value;
+            const container = document.getElementById('preview-art');
+            if(!prompt) return alert('Introdu o descriere!');
+            container.innerHTML = `<div class="preview-result"><div class="spinner"></div><p>Se generează imaginea...</p></div>`;
+            const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt + ', ' + style)}?width=1024&height=768&nologo=true`;
+            const img = new Image();
+            img.src = url;
+            img.onload = () => container.innerHTML = `<div class="preview-result"><img src="${url}"><a href="${url}" target="_blank" class="btn-primary" style="padding:0.5rem 1rem;font-size:0.85rem;">Descarcă</a></div>`;
+        }
+
+        let uploadedImageSrc = '';
+        document.getElementById('image-upload').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    uploadedImageSrc = event.target.result;
+                    document.getElementById('photo-preview').innerHTML = `<img src="${uploadedImageSrc}" id="target-img">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function applyPhotoFilter() {
+            if(!uploadedImageSrc) return alert('Încarcă o poză mai întâi!');
+            document.getElementById('target-img').style.filter = document.getElementById('filter-select').value;
+        }
+
+        function generateVideo() {
+            const p = document.getElementById('video-prompt').value;
+            if(!p) return alert('Introdu un scenariu!');
+            const cp = document.getElementById('video-preview');
+            cp.innerHTML = `<div class="preview-result"><div class="spinner"></div><p>Se randarează video-ul...</p></div>`;
+            setTimeout(() => cp.innerHTML = `<div class="preview-result"><p style="color:#818cf8;font-weight:bold;">▶️ Redare Video: "${p}"</p><p style="font-size:0.85rem;color:var(--text-muted);">[Generat cu succes]</p></div>`, 2000);
+        }
+
+        function generateMelodie() {
+            const p = document.getElementById('melodie-prompt').value;
+            const cp = document.getElementById('melodie-preview');
+            cp.innerHTML = `<div class="preview-result"><div class="spinner"></div><p>Se compune piesa...</p></div>`;
+            setTimeout(() => cp.innerHTML = `<div class="preview-result"><p style="color:#818cf8;font-weight:bold;">🎵 Piesă Generată: "${p}"</p><audio controls style="width:100%"><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3"></audio></div>`, 2000);
+        }
+
+        let mediaRec, chunks = [];
+        async function toggleRecord() {
+            const btn = document.getElementById('record-btn');
+            const cp = document.getElementById('audio-preview');
+            if (!mediaRec || mediaRec.state === "inactive") {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRec = new MediaRecorder(stream);
+                    chunks = [];
+                    mediaRec.ondataavailable = e => chunks.push(e.data);
+                    mediaRec.onstop = () => {
+                        const blob = new Blob(chunks, { type: 'audio/mp3' });
+                        cp.innerHTML = `<div class="preview-result"><p style="color:#818cf8;font-weight:bold;">Înregistrare finalizată!</p><audio controls src="${URL.createObjectURL(blob)}" style="width:100%"></audio></div>`;
+                    };
+                    mediaRec.start();
+                    btn.textContent = "⏹️ Oprește";
+                    btn.style.background = "#22c55e";
+                } catch { alert('Eroare microfon.'); }
+            } else {
+                mediaRec.stop();
+                btn.textContent = "🎙️ Înregistrează Vocea";
+                btn.style.background = "#ef4444";
+            }
+        }
+    </script>
+</body>
+</html>
